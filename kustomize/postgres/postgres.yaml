@@ -3,16 +3,42 @@ kind: PostgresCluster
 metadata:
   name: hippo
 spec:
+  patroni:
+    dynamicConfiguration:
+      synchronous_mode: true
+      postgresql:
+        parameters:
+          synchronous_commit: "on"
   image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres:centos8-13.5-0
   postgresVersion: 13
   instances:
     - name: instance1
+      replicas: 2
       dataVolumeClaimSpec:
         accessModes:
         - "ReadWriteOnce"
+        storageClassName: openebs-hostpath
         resources:
           requests:
             storage: 1Gi
+    - name: instance2
+      replicas: 2
+      dataVolumeClaimSpec:
+        accessModes:
+        - "ReadWriteOnce"
+        storageClassName: openebs-hostpath
+        resources:
+          requests:
+            storage: 2Gi
+    - name: instance3
+      replicas: 1
+      dataVolumeClaimSpec:
+        accessModes:
+        - "ReadWriteOnce"
+        storageClassName: openebs-hostpath
+        resources:
+          requests:
+            storage: 3Gi 
   backups:
     pgbackrest:
       image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:centos8-2.36-0
@@ -22,6 +48,7 @@ spec:
           volumeClaimSpec:
             accessModes:
             - "ReadWriteOnce"
+            storageClassName: openebs-hostpath
             resources:
               requests:
                 storage: 1Gi

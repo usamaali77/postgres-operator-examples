@@ -1,4 +1,4 @@
-namespace: postgres-operator
+namespace: postgres-db
 
 resources:
 - postgres.yaml
